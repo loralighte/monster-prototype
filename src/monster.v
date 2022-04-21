@@ -1,16 +1,11 @@
 import os
 import io 
+import loralighte.filereader as vfr
 
 fn main(){
-	mut file := os.open("MonsterFile") ?
-	mut data := []string{}
-	mut read_data := io.new_buffered_reader(reader: file)
-	for {
-		l := read_data.read_line() or { break }
-		data << l
-	}
+	monsterfile := vfr.read_lines("MonsterFile")
 	mut chars := []string{}
-	for i in data{
+	for i in monsterfile{
 		mut str := []string{}
 		for char in i{
 			if rune(char).str() != " "{
@@ -33,22 +28,13 @@ fn main(){
 			option = ""
 		}
 	}
-	mut tagdata := ""
 	mut tag_output := []string{}
-	unsafe {
-		mut open_files := []os.File{}
-		for i in files {
-			open_files << os.open(i) ?
-		}
-		for i in open_files{
-			mut file_data := io.new_buffered_reader(reader: i)
-			for {
-				l := file_data.read_line() or { break }
-				tagdata += l
-			}
-			tag_output << tagdata
-			tagdata = ""
-		}
+	mut open_files := []string{}
+	for i in files {
+		open_files << vfr.read_lines(i)
+	}
+	for i in open_files{
+		tag_output << i
 	}
 	output := os.args[1]
 	mut data_to_write := []byte{}
