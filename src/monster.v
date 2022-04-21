@@ -31,7 +31,24 @@ fn main(){
 	mut tag_output := []string{}
 	mut open_files := []string{}
 	for i in files {
-		open_files << vfr.read(i)
+		file_contents := vfr.read_lines(i) 
+		mut html := ""
+		for line in file_contents {
+			mut line_cleared := ""
+			mut pos := -1
+			for char in line {
+				pos += 1
+				if rune(char).str() != " "{
+					line_cleared += rune(char).str()
+				} else {
+					if rune(line[pos+1]).str() != " " && rune(line[pos+1]).str() != "<" {
+						line_cleared += rune(char).str()
+					}
+				}
+			}
+			html += line_cleared
+		}
+		open_files << html
 	}
 	for i in open_files{
 		tag_output << i
